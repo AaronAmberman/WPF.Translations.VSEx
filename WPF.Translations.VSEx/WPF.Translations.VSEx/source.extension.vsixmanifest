@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+    <Metadata>
+        <Identity Id="WPF.Translations.VSEx.ade07114-ae00-40bb-aba2-92fdad6f2b1c" Version="1.0.0" Language="en-US" Publisher="Aaron Amberman" />
+        <DisplayName>WPF.Translations Visual Studio Extension</DisplayName>
+        <Description xml:space="preserve">A Visual Studio extension to help manage a collection of strings to translate. Strings are kept in a XAML ResourceDictionary (Translations.[culture].xaml) or a text file (Translations.[culture].txt). Add a string or remove a string and that string is added or removed from all translation files.</Description>
+        <License>LICENSE.txt</License>
+        <Icon>Resources\Icon.png</Icon>
+        <PreviewImage>Resources\Icon.png</PreviewImage>
+        <Tags>WPF.Translation,WPF.Translations,WPF.Translations.TranslationBinding,WPF translation,WPF translations,WPF translatable strings</Tags>
+    </Metadata>
+    <Installation>
+        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0, 18.0)">
+            <ProductArchitecture>amd64</ProductArchitecture>
+        </InstallationTarget>
+    </Installation>
+    <Prerequisites>
+        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,)" DisplayName="Visual Studio core editor" />
+    </Prerequisites>
+    <Assets>
+        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+    </Assets>
+</PackageManifest>

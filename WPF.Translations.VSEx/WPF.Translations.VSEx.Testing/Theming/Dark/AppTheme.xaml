@@ -1,0 +1,51 @@
+﻿<!-- 
+    Dark
+-->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:options="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
+                    mc:Ignorable="options">
+    <Color x:Key="WPF.Translations.VSEx.Testing.Foreground.Color">#FFFFFFFF</Color>
+    <Color x:Key="WPF.Translations.VSEx.Testing.Foreground.Disabled.Color">#FF7D7D7D</Color>
+    <Color x:Key="WPF.Translations.VSEx.Testing.Foreground.Error.Color">#FFFF0000</Color>
+    <Color x:Key="WPF.Translations.VSEx.Testing.Border.Color">#FFFFFFFF</Color>
+    <Color x:Key="WPF.Translations.VSEx.Testing.Grid.Color">#FF1F1F1F</Color>
+    <Color x:Key="WPF.Translations.VSEx.Testing.InternalDialog.Color">#FF2F2F2F</Color>
+    <Color x:Key="WPF.Translations.VSEx.Testing.InternalDialog.Title.Color">#FF101010</Color>
+    <Color x:Key="WPF.Translations.VSEx.Testing.InternalDialog.ButtonArea.Color">#FF2F2F2F</Color>
+    <Color x:Key="WPF.Translations.VSEx.Testing.MessageBox.Color">#FF2F2F2F</Color>
+    <Color x:Key="WPF.Translations.VSEx.Testing.MessageBox.Foreground.Color">#FFFFFFFF</Color>
+    <Color x:Key="WPF.Translations.VSEx.Testing.MessageBox.Title.Color">#FF101010</Color>
+    <Color x:Key="WPF.Translations.VSEx.Testing.MessageBox.ButtonArea.Color">#FF2F2F2F</Color>
+    <Color x:Key="WPF.Translations.VSEx.Testing.ProgressBox.Background.Color">#FF2F2F2F</Color>
+    <Color x:Key="WPF.Translations.VSEx.Testing.ProgressBox.Foreground.Color">#FFFFFFFF</Color>
+    <Color x:Key="WPF.Translations.VSEx.Testing.ProgressBox.Title.Background.Color">#FF2F2F2F</Color>
+
+    <SolidColorBrush x:Key="WPF.Translations.VSEx.Testing.Foreground" Color="{DynamicResource WPF.Translations.VSEx.Testing.Foreground.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="WPF.Translations.VSEx.Testing.Foreground.Disabled" Color="{DynamicResource WPF.Translations.VSEx.Testing.Foreground.Disabled.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="WPF.Translations.VSEx.Testing.Foreground.Error" Color="{DynamicResource WPF.Translations.VSEx.Testing.Foreground.Error.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="WPF.Translations.VSEx.Testing.Border" Color="{DynamicResource WPF.Translations.VSEx.Testing.Border.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="WPF.Translations.VSEx.Testing.Grid" Color="{DynamicResource WPF.Translations.VSEx.Testing.Grid.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="WPF.Translations.VSEx.Testing.InternalDialog" Color="{DynamicResource WPF.Translations.VSEx.Testing.InternalDialog.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="WPF.Translations.VSEx.Testing.InternalDialog.Title" Color="{DynamicResource WPF.Translations.VSEx.Testing.InternalDialog.Title.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="WPF.Translations.VSEx.Testing.InternalDialog.ButtonArea" Color="{DynamicResource WPF.Translations.VSEx.Testing.InternalDialog.ButtonArea.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="WPF.Translations.VSEx.Testing.MessageBox" Color="{DynamicResource WPF.Translations.VSEx.Testing.MessageBox.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="WPF.Translations.VSEx.Testing.MessageBox.Foreground" Color="{DynamicResource WPF.Translations.VSEx.Testing.MessageBox.Foreground.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="WPF.Translations.VSEx.Testing.MessageBox.Title" Color="{DynamicResource WPF.Translations.VSEx.Testing.MessageBox.Title.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="WPF.Translations.VSEx.Testing.MessageBox.ButtonArea" Color="{DynamicResource WPF.Translations.VSEx.Testing.MessageBox.ButtonArea.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="WPF.Translations.VSEx.Testing.ProgressBox.Background" Color="{DynamicResource WPF.Translations.VSEx.Testing.ProgressBox.Background.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="WPF.Translations.VSEx.Testing.ProgressBox.Foreground" Color="{DynamicResource WPF.Translations.VSEx.Testing.ProgressBox.Foreground.Color}" options:Freeze="True"/>
+    <SolidColorBrush x:Key="WPF.Translations.VSEx.Testing.ProgressBox.Title.Background" Color="{DynamicResource WPF.Translations.VSEx.Testing.ProgressBox.Title.Background.Color}" options:Freeze="True"/>
+    
+    <Style x:Key="GridStyle" TargetType="Grid">
+        <Setter Property="Background" Value="{DynamicResource WPF.Translations.VSEx.Testing.Grid}" />
+    </Style>
+    <Style x:Key="TextBlockForegroundStyle" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource WPF.Translations.VSEx.Testing.Foreground}" />
+    </Style>
+    <Style x:Key="BorderStyle" TargetType="Border">
+        <Setter Property="BorderBrush" Value="{DynamicResource WPF.Translations.VSEx.Testing.Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+</ResourceDictionary>

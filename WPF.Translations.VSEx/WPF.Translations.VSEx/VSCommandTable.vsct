@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <Extern href="stdidcmd.h" />
+  <Extern href="vsshlids.h" />
+  <Include href="KnownImageIds.vsct" />
+  <Include href="VSGlobals.vsct" />
+
+  <Commands package="WPF.Translations.VSEx">  
+    <Buttons>
+      <Button guid="guidVSExPackageCmdSet" id="cmdidTranslationStringsToolWindowCommand" priority="0x0100" type="Button">
+        <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1" />
+		<Icon guid="ImageCatalogGuid" id="Translate" />
+		<CommandFlag>IconIsMoniker</CommandFlag>
+        <Strings>
+            <ButtonText>Translation Strings</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+  </Commands>
+
+  <Symbols>
+    <GuidSymbol name="WPF.Translations.VSEx" value="{2817b031-86f1-4cde-894c-25b60903df95}">
+      
+    </GuidSymbol>
+  
+    <GuidSymbol value="{f1217d2a-40d8-4659-afdc-88128592d174}" name="guidVSExPackageCmdSet">
+      <IDSymbol value="256" name="cmdidTranslationStringsToolWindowCommand" />
+    </GuidSymbol>
+  </Symbols>
+</CommandTable>
