@@ -24,7 +24,7 @@
                             ToolTip="{Binding Translations.Settings}" />
                 </Grid>
                 <Grid Grid.Row="1">
-                    <!-- content -->
+                    <!-- content -->                    
                 </Grid>
                 <Grid Grid.Row="2">
                     <!-- footer -->

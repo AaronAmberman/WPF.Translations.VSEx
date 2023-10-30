@@ -4,14 +4,59 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
+             xmlns:local="clr-namespace:WPF.Translations.VSEx"
              Background="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowBackgroundKey}}"
              Foreground="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowTextKey}}"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
-             Name="TSToolWindow">
+             Name="TSToolWindow"
+             d:DataContext="{d:DesignInstance Type={x:Type local:TranslationViewModel}}">
     <Grid x:Name="mainGrid">
         <Grid x:Name="innerMainGrid" Margin="5">
-            
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" MinWidth="60" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Project" />
+                <ComboBox Grid.Column="1" Margin="5,0,0,0" ItemsSource="{Binding ProjectsWithTranslations}" 
+                          SelectedIndex="{Binding SelectedProject}"
+                          Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ComboBoxStyleKey}}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Item1}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </Grid>
+            <Grid Grid.Row="1" Margin="0,5,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" MinWidth="60" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Resource" />
+                <ComboBox Grid.Column="1" Margin="5,0,0,0" ItemsSource="{Binding TranslationFilesView}" 
+                          SelectedItem="{Binding SelectedTranslationFile}"
+                          Style="{DynamicResource {x:Static vsshell:VsResourceKeys.ComboBoxStyleKey}}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Item1}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </Grid>
+            <DataGrid Grid.Row="2" Margin="0,5,0,0" AutoGenerateColumns="False" IsReadOnly="True"
+                      ItemsSource="{Binding Translations}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Key" Binding="{Binding Item1}" Width="*" />
+                    <DataGridTextColumn Header="Value" Binding="{Binding Item2}" Width="2*" />
+                </DataGrid.Columns>
+            </DataGrid>
         </Grid>
     </Grid>
 </UserControl>
