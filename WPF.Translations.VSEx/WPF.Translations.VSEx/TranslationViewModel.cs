@@ -79,7 +79,7 @@ namespace WPF.Translations.VSEx
                 OnPropertyChanged();
 
                 if (value == null) return;
-
+                
                 ReadInTranslationsFromFile(value.Item2.FullPath);
             }
         }

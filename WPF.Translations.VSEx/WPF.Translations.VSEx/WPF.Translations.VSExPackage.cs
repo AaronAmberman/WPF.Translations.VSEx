@@ -11,6 +11,20 @@ using System.Threading;
 
 namespace WPF.Translations.VSEx
 {
+    /*
+     * For a helpful example check out this extension that manages translation files and translations...
+     * https://github.com/JoacimWall/Visual-studio-multilingual-extension
+     * 
+     * Using Google API to translate...
+     * https://github.com/JoacimWall/Visual-studio-multilingual-extension/blob/main/src/MultilingualExtension/MultilingualExtension.SharedCode/Services/TranslationService.cs
+     * 
+     * VS Theme Colors...
+     * https://learn.microsoft.com/en-us/dotnet/api/microsoft.visualstudio.platformui.environmentcolors?view=visualstudiosdk-2022&redirectedfrom=MSDN
+     * 
+     * VS Resource Keys...
+     * https://learn.microsoft.com/en-us/dotnet/api/microsoft.visualstudio.shell.vsresourcekeys?view=visualstudiosdk-2019
+     */
+
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [InstalledProductRegistration(Vsix.Name, Vsix.Description, Vsix.Version)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
@@ -22,9 +36,6 @@ namespace WPF.Translations.VSEx
     [ProvideToolWindowVisibility(typeof(TranslationStringsToolWindow), VSConstants.UICONTEXT.Debugging_string)]
     public sealed class VSExPackage : ToolkitPackage
     {
-        //private DTE2 devEnv;
-        //private SolutionEvents solutionEvents;
-
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
             await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
