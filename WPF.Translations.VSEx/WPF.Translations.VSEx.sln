@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34202.233
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WPF.Translations.VSEx.Testing", "WPF.Translations.VSEx.Testing\WPF.Translations.VSEx.Testing.csproj", "{6B9FA6DA-3396-43FF-A4D7-ADF8B9CD7F94}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF.Translations.VSEx", "WPF.Translations.VSEx\WPF.Translations.VSEx.csproj", "{ED986500-532C-44C0-8DFF-DA1F09C5BD7C}"
 EndProject
 Global
@@ -17,18 +15,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6B9FA6DA-3396-43FF-A4D7-ADF8B9CD7F94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6B9FA6DA-3396-43FF-A4D7-ADF8B9CD7F94}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6B9FA6DA-3396-43FF-A4D7-ADF8B9CD7F94}.Debug|arm64.ActiveCfg = Debug|Any CPU
-		{6B9FA6DA-3396-43FF-A4D7-ADF8B9CD7F94}.Debug|arm64.Build.0 = Debug|Any CPU
-		{6B9FA6DA-3396-43FF-A4D7-ADF8B9CD7F94}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{6B9FA6DA-3396-43FF-A4D7-ADF8B9CD7F94}.Debug|x86.Build.0 = Debug|Any CPU
-		{6B9FA6DA-3396-43FF-A4D7-ADF8B9CD7F94}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6B9FA6DA-3396-43FF-A4D7-ADF8B9CD7F94}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6B9FA6DA-3396-43FF-A4D7-ADF8B9CD7F94}.Release|arm64.ActiveCfg = Release|Any CPU
-		{6B9FA6DA-3396-43FF-A4D7-ADF8B9CD7F94}.Release|arm64.Build.0 = Release|Any CPU
-		{6B9FA6DA-3396-43FF-A4D7-ADF8B9CD7F94}.Release|x86.ActiveCfg = Release|Any CPU
-		{6B9FA6DA-3396-43FF-A4D7-ADF8B9CD7F94}.Release|x86.Build.0 = Release|Any CPU
 		{ED986500-532C-44C0-8DFF-DA1F09C5BD7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{ED986500-532C-44C0-8DFF-DA1F09C5BD7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED986500-532C-44C0-8DFF-DA1F09C5BD7C}.Debug|arm64.ActiveCfg = Debug|arm64
