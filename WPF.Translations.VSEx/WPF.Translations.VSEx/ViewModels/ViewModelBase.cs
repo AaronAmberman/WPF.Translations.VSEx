@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace WPF.Translations.VSEx
+namespace WPF.Translations.VSEx.ViewModels
 {
     /// <summary>Abstract base view model type.</summary>
     /// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />

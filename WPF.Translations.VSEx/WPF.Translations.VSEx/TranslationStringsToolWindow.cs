@@ -1,6 +1,4 @@
 ﻿using Microsoft.VisualStudio.Imaging;
-using Microsoft.VisualStudio.Shell;
-using System;
 using System.Runtime.InteropServices;
 
 namespace WPF.Translations.VSEx

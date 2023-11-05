@@ -2,10 +2,7 @@
 global using Microsoft.VisualStudio.Shell;
 global using System;
 global using Task = System.Threading.Tasks.Task;
-using EnvDTE;
-using EnvDTE80;
 using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.Shell.Interop;
 using System.Runtime.InteropServices;
 using System.Threading;
 
@@ -34,6 +31,7 @@ namespace WPF.Translations.VSEx
     [ProvideToolWindowVisibility(typeof(TranslationStringsToolWindow), VSConstants.UICONTEXT.SolutionHasMultipleProjects_string)]
     [ProvideToolWindowVisibility(typeof(TranslationStringsToolWindow), VSConstants.UICONTEXT.SolutionHasSingleProject_string)]
     [ProvideToolWindowVisibility(typeof(TranslationStringsToolWindow), VSConstants.UICONTEXT.Debugging_string)]
+    [ProvideOptionPage(typeof(OptionsProvider.GeneralOptions), "WPF.Translations.VSEx", "General", 0, 0, true, SupportsProfiles = true)]
     public sealed class VSExPackage : ToolkitPackage
     {
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
