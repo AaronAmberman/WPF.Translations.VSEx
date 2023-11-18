@@ -6,7 +6,7 @@ using System.Windows.Data;
 
 namespace WPF.Translations.VSEx.ViewModels
 {
-    internal class TranslationViewModel : ViewModelBase
+    public class TranslationViewModel : ViewModelBase
     {
         #region Fields
 
@@ -153,7 +153,7 @@ namespace WPF.Translations.VSEx.ViewModels
 
             if (string.IsNullOrWhiteSpace(fullPath))
             {
-                System.Windows.MessageBox.Show("A master translation could not be found in the project. Change master language in settings or create master translation for project.", "No Master Translation");
+                System.Windows.MessageBox.Show($"A master translation file could not be found in the project {SelectedProject.Name}.", "No Master Translation");
 
                 return;
             }

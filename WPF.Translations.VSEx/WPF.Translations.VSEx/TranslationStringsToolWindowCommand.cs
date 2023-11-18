@@ -79,9 +79,10 @@ namespace WPF.Translations.VSEx
         /// <param name="e">The event args.</param>
         private void Execute(object sender, EventArgs e)
         {
-            this.package.JoinableTaskFactory.RunAsync(async delegate
+            package.JoinableTaskFactory.RunAsync(async delegate
             {
-                ToolWindowPane window = await this.package.ShowToolWindowAsync(typeof(TranslationStringsToolWindow), 0, true, this.package.DisposalToken);
+                ToolWindowPane window = await package.ShowToolWindowAsync(typeof(TranslationStringsToolWindow), 0, true, package.DisposalToken);
+                
                 if ((null == window) || (null == window.Frame))
                 {
                     throw new NotSupportedException("Cannot create tool window");

@@ -1,6 +1,6 @@
 ﻿namespace WPF.Translations.VSEx.ViewModels
 {
-    internal class ProjectTranslationFileViewModel : ViewModelBase
+    public class ProjectTranslationFileViewModel : ViewModelBase
     {
         #region Fields
 

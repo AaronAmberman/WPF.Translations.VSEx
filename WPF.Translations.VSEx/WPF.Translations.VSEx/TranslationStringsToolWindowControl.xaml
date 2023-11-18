@@ -6,12 +6,18 @@
              xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
              xmlns:local="clr-namespace:WPF.Translations.VSEx.ViewModels"
              xmlns:toolkit="clr-namespace:Community.VisualStudio.Toolkit;assembly=Community.VisualStudio.Toolkit"
+             xmlns:converters="clr-namespace:WPF.Translations.VSEx.Converters"
              Background="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowBackgroundKey}}"
              Foreground="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowTextKey}}"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
              Name="TSToolWindow"
              d:DataContext="{d:DesignInstance Type={x:Type local:TranslationViewModel}}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:EqualsMasterLanguageConverter x:Key="EqualsMasterLanguageConverter" />
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid x:Name="mainGrid">
         <Grid x:Name="innerMainGrid" Margin="5">
             <Grid.RowDefinitions>
@@ -28,7 +34,7 @@
                 <TextBlock Grid.Column="0" Text="Master Language" Padding="0,2,0,0" />
                 <Border Grid.Column="1" Margin="5,0,0,0" BorderThickness="1" HorizontalAlignment="Left"
                         BorderBrush="{DynamicResource {x:Static vsshell:VsBrushes.AccentBorderKey}}">
-                    <TextBlock Text="{Binding MasterLanguage}" Padding="4,1" />
+                    <TextBlock Text="{Binding MasterLanguage}" Foreground="Green" Padding="4,1" />
                 </Border>
             </Grid>
             <Grid Grid.Row="1" Margin="0,5,0,0">
@@ -68,6 +74,15 @@
                             <TextBlock Text="{Binding CultureName}" />
                         </DataTemplate>
                     </ListBox.ItemTemplate>
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CultureName, Converter={StaticResource EqualsMasterLanguageConverter}}" Value="True">
+                                    <Setter Property="Foreground" Value="Green" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
                 </ListBox>
             </Grid>
             <DataGrid Grid.Row="3" Margin="0,5,0,0" AutoGenerateColumns="False" IsReadOnly="True"

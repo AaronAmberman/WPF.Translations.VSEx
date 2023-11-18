@@ -5,7 +5,7 @@ namespace WPF.Translations.VSEx.ViewModels
 {
     /// <summary>Abstract base view model type.</summary>
     /// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />
-    internal abstract class ViewModelBase : INotifyPropertyChanged
+    public abstract class ViewModelBase : INotifyPropertyChanged
     {
         /// <summary>Occurs when a property value changes.</summary>
         public event PropertyChangedEventHandler PropertyChanged;
@@ -21,7 +21,7 @@ namespace WPF.Translations.VSEx.ViewModels
     /// <summary>Abstract base view model type.</summary>
     /// <typeparam name="T">The type of model.</typeparam>
     /// <seealso cref="ViewModelBase" />
-    internal abstract class ViewModelBase<T> : ViewModelBase
+    public abstract class ViewModelBase<T> : ViewModelBase
     {
         /// <summary>Gets the model.</summary>
         public T Model { get; protected set; }
