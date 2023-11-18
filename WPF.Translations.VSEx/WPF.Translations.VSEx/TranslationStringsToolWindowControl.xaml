@@ -16,6 +16,14 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <converters:EqualsMasterLanguageConverter x:Key="EqualsMasterLanguageConverter" />
+            <Style x:Key="DGCH_Style" TargetType="DataGridColumnHeader" BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
+                <Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowBackgroundKey}}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowBorderKey}}" />
+                <Setter Property="BorderThickness" Value="1,1,1,2" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontWeight" Value="Bold" />
+                <Setter Property="Padding" Value="5" />
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid x:Name="mainGrid">
@@ -61,7 +69,7 @@
                 <TextBlock Grid.Column="0" Text="Languages" />
                 <ListBox Grid.Column="1" Background="Transparent" Margin="5,0,0,0" SelectionMode="Single"
                          ItemsSource="{Binding TranslationFilesView}"
-                         BorderBrush="{DynamicResource {x:Static vsshell:VsBrushes.AccentBorderKey}}"
+                         BorderBrush="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowBorderKey}}"
                          Foreground="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowTextKey}}"
                          SelectionChanged="ListBox_SelectionChanged">
                     <ListBox.ItemsPanel>
@@ -85,11 +93,29 @@
                     </ListBox.ItemContainerStyle>
                 </ListBox>
             </Grid>
-            <DataGrid Grid.Row="3" Margin="0,5,0,0" AutoGenerateColumns="False" IsReadOnly="True"
+            <DataGrid Grid.Row="3" Margin="0,5,0,0" AutoGenerateColumns="False" MinRowHeight="20" RowHeaderWidth="0"
+                      Background="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowBackgroundKey}}"
+                      Foreground="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowTextKey}}"
+                      HorizontalGridLinesBrush="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowBorderKey}}"
+                      VerticalGridLinesBrush="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowBorderKey}}"                      
                       ItemsSource="{Binding Translations}">
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowBackgroundKey}}" />
+                        <!--<Setter Property="HeaderStyle">
+                            <Setter.Value>
+                                <Style TargetType="DataGridRowHeader">
+                                    <Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowBackgroundKey}}" />
+                                    <Setter Property="BorderBrush" Value="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowBorderKey}}" />
+                                    <Setter Property="BorderThickness" Value="1" />
+                                </Style>
+                            </Setter.Value>
+                        </Setter>-->
+                    </Style>
+                </DataGrid.RowStyle>
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Key" Binding="{Binding Key}" Width="*" />
-                    <DataGridTextColumn Header="Value" Binding="{Binding Value}" Width="2*" />
+                    <DataGridTextColumn Header="Key" Binding="{Binding Key}" Width="*" HeaderStyle="{StaticResource DGCH_Style}" />
+                    <DataGridTextColumn Header="Value" Binding="{Binding Value}" Width="3*" HeaderStyle="{StaticResource DGCH_Style}" />
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

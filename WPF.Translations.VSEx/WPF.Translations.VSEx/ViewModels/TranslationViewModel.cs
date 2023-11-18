@@ -153,7 +153,7 @@ namespace WPF.Translations.VSEx.ViewModels
 
             if (string.IsNullOrWhiteSpace(fullPath))
             {
-                System.Windows.MessageBox.Show($"A master translation file could not be found in the project {SelectedProject.Name}.", "No Master Translation");
+                System.Windows.MessageBox.Show($"A master translation file could not be found in the project {SelectedProject.Name}. Change setting or add master file.", "No Master Translation");
 
                 return;
             }

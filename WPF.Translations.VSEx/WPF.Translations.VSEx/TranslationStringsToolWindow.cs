@@ -99,12 +99,7 @@ namespace WPF.Translations.VSEx
 
                 viewModel.MasterLanguage = settingsInstance.MasterLanguage;
 
-                ThreadHelper.JoinableTaskFactory.Run(async () =>
-                {
-                    List<ProjectTranslationFileViewModel> translatableFiles = await DevelopmentEnvironment.GetTranslationFilesForSolutionAsync();
-
-                    SetTranslationData(translatableFiles);
-                });
+                ThreadHelper.JoinableTaskFactory.Run(ReadInTranslationsAsync);
             }
         }
 
@@ -121,9 +116,7 @@ namespace WPF.Translations.VSEx
 
                 viewModel.MasterLanguage = DevelopmentEnvironment.Settings.MasterLanguage;
 
-                List<ProjectTranslationFileViewModel> translatableFiles = await DevelopmentEnvironment.GetTranslationFilesForSolutionAsync();
-
-                SetTranslationData(translatableFiles);
+                await ReadInTranslationsAsync();
             });
         }
 
@@ -140,6 +133,13 @@ namespace WPF.Translations.VSEx
         private void ProjectEvents_ItemRenamed(ProjectItem ProjectItem, string OldName)
         {
 
+        }
+
+        private async Task ReadInTranslationsAsync()
+        {
+            List<ProjectTranslationFileViewModel> translatableFiles = await DevelopmentEnvironment.GetTranslationFilesForSolutionAsync();
+
+            SetTranslationData(translatableFiles);
         }
 
         private void SetTranslationData(List<ProjectTranslationFileViewModel> projectTranslationFiles)
