@@ -111,6 +111,7 @@ namespace WPF.Translations.VSEx
                 DevelopmentEnvironment.Settings = settingsInstance;
 
                 viewModel.MasterLanguage = settingsInstance.MasterLanguage;
+                // todo : handle master language change
 
                 ThreadHelper.JoinableTaskFactory.Run(ReadInTranslationsAsync);
             }

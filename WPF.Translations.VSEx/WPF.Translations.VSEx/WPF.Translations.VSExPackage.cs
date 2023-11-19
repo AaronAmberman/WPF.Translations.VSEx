@@ -6,6 +6,7 @@ global using Task = System.Threading.Tasks.Task;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Shell.Interop;
 using System.Runtime.InteropServices;
 using System.Threading;
 
@@ -71,6 +72,16 @@ namespace WPF.Translations.VSEx
             DevelopmentEnvironment.VisualStudioEvents = DevelopmentEnvironment.DTE.Events;
             DevelopmentEnvironment.SolutionEvents = DevelopmentEnvironment.VisualStudioEvents.SolutionEvents;
             DevelopmentEnvironment.ProjectEvents = DevelopmentEnvironment.VisualStudioEvents.SolutionItemsEvents;
+
+            DevelopmentEnvironment.OutputWindow = await GetServiceAsync(typeof(IVsOutputWindow)) as IVsOutputWindow;
+            
+            IVsOutputWindowPane outputWindowPane;
+
+            DevelopmentEnvironment.OutputWindow.CreatePane(DevelopmentEnvironment.OutputWidowGuid, "WPF.Translations.VSEx", 1, 1);
+            DevelopmentEnvironment.OutputWindow.GetPane(DevelopmentEnvironment.OutputWidowGuid, out outputWindowPane);
+            DevelopmentEnvironment.OutputWindowPane = outputWindowPane;
+
+            DevelopmentEnvironment.WriteToOutputWindow("Testing my new output writing routine");
         }
 
         #endregion

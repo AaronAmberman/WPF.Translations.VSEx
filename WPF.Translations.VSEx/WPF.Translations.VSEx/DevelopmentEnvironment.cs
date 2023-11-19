@@ -1,8 +1,9 @@
-﻿using EnvDTE;
+﻿using Community.VisualStudio.Toolkit;
+using EnvDTE;
 using EnvDTE80;
+using Microsoft.VisualStudio.Shell.Interop;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Windows.Documents;
 using WPF.Translations.VSEx.ViewModels;
 
 namespace WPF.Translations.VSEx
@@ -15,6 +16,12 @@ namespace WPF.Translations.VSEx
         public static DTE DTE { get; set; }
 
         public static DTE2 DTE2 { get; set; }
+
+        public static Guid OutputWidowGuid { get; set; } = Guid.NewGuid();
+
+        public static IVsOutputWindow OutputWindow { get; set; }
+
+        public static IVsOutputWindowPane OutputWindowPane { get; set; }
 
         public static EnvDTE.ProjectItemsEvents ProjectEvents { get; set; }
 
@@ -77,6 +84,13 @@ namespace WPF.Translations.VSEx
             }
 
             return projectTranslationFileViewModels;
+        }
+
+        public static int WriteToOutputWindow(string message)
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            return OutputWindowPane.OutputStringThreadSafe(message);
         }
 
         #endregion
