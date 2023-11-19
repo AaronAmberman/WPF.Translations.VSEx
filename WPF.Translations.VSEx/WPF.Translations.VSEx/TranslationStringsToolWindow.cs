@@ -122,17 +122,18 @@ namespace WPF.Translations.VSEx
 
         private void ProjectEvents_ItemAdded(ProjectItem ProjectItem)
         {
-
+            // todo : determine if item is a translation, if so update our stuff
         }
 
         private void ProjectEvents_ItemRemoved(ProjectItem ProjectItem)
         {
-
+            // todo : determine if item is a translation, if so update our stuff
         }
 
         private void ProjectEvents_ItemRenamed(ProjectItem ProjectItem, string OldName)
         {
-
+            // todo : is this the project being renamed or a file being renamed...or both?
+            // todo : determine if item is a translation, if so update our stuff
         }
 
         private async Task ReadInTranslationsAsync()
@@ -166,27 +167,27 @@ namespace WPF.Translations.VSEx
 
         private void SolutionEvents_AfterClosing()
         {
-
+            // todo : clean up our data
         }
 
         private void SolutionEvents_Opened()
         {
-
+            // todo : read in our data
         }
 
         private void SolutionEvents_ProjectRemoved(EnvDTE.Project Project)
         {
-
+            // todo : remove the project and translations from our data (if any)
         }
 
         private void SolutionEvents_ProjectAdded(EnvDTE.Project Project)
         {
-
+            // todo : if the newly added project contains translations added it to our data (dev can add an existing project)
         }
 
         private void SolutionEvents_Renamed(string OldName)
         {
-
+            // todo : is this the solution or the project(s) in the solution?
         }
 
         #endregion
