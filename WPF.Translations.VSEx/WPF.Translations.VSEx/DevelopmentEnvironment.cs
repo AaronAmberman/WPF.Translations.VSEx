@@ -39,8 +39,7 @@ namespace WPF.Translations.VSEx
             {
                 foreach (SolutionItem item in project.Children)
                 {
-                    // translations directory
-                    if (item.Name.EndsWith("translations\\", StringComparison.OrdinalIgnoreCase))
+                    if (item.Name.IsTranslationsDirectory())
                     {
                         // the project contains a translations directory
 
@@ -48,13 +47,18 @@ namespace WPF.Translations.VSEx
                         {
                             if (childItem.Name.EndsWith(".xaml", StringComparison.OrdinalIgnoreCase))
                             {
+                                string childCulture = childItem.Text.GetCultureFromFileName(".xaml");
+
+                                // if we cannot determine the culture on the file then skip it
+                                if (string.IsNullOrWhiteSpace(childCulture)) continue;
+
                                 ProjectTranslationFileViewModel ptfvm = new ProjectTranslationFileViewModel
                                 {
                                     Project = project,
                                     SolutionItem = childItem,
                                 };
                                 ptfvm.FriendlyName = childItem.Text;
-                                ptfvm.CultureName = childItem.Text.Replace("Translations.", "").Replace(".xaml", "");
+                                ptfvm.CultureName = childCulture;
 
                                 // this is our translation XAML
                                 projectTranslationFileViewModels.Add(ptfvm);
