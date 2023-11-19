@@ -80,8 +80,6 @@ namespace WPF.Translations.VSEx
             DevelopmentEnvironment.OutputWindow.CreatePane(DevelopmentEnvironment.OutputWidowGuid, "WPF.Translations.VSEx", 1, 1);
             DevelopmentEnvironment.OutputWindow.GetPane(DevelopmentEnvironment.OutputWidowGuid, out outputWindowPane);
             DevelopmentEnvironment.OutputWindowPane = outputWindowPane;
-
-            DevelopmentEnvironment.WriteToOutputWindow("Testing my new output writing routine");
         }
 
         #endregion
