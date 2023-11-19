@@ -50,6 +50,8 @@ namespace WPF.Translations.VSEx.ViewModels
                 selectedProject = value;
                 OnPropertyChanged();
 
+                if (value == null) return;
+
                 FindAndLoadMasterTranslationForSelectedProject();
                 TranslationFilesView.Refresh();
             }

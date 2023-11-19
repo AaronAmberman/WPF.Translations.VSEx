@@ -69,6 +69,17 @@ namespace WPF.Translations.VSEx
 
         #region Methods
 
+        private void CleanViewModel(bool keepMasterLanguage)
+        {
+            if (!keepMasterLanguage)
+                viewModel.MasterLanguage = string.Empty;
+            
+            viewModel.SelectedProject = null;
+            viewModel.ProjectsWithTranslations.Clear();
+            viewModel.TranslationFiles.Clear();
+            viewModel.Translations.Clear();
+        }
+
         protected override void Dispose(bool disposing)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
@@ -89,6 +100,8 @@ namespace WPF.Translations.VSEx
             General.Saved -= General_Saved;
 
             control = null;
+
+            CleanViewModel(false);
         }
 
         private void General_Saved(General settingsInstance)
@@ -107,17 +120,21 @@ namespace WPF.Translations.VSEx
         {
             base.Initialize();
 
-            ThreadHelper.JoinableTaskFactory.Run(async () =>
-            {
-                DevelopmentEnvironment.Settings = await General.GetLiveInstanceAsync();
+            ThreadHelper.JoinableTaskFactory.Run(InitializeInternalAsync);
+        }
 
-                if (DevelopmentEnvironment.Settings == null)
-                    throw new InvalidOperationException("Unable to read settings for Visual Studio extension WPF.Translations.VSEx.");
+        private async Task InitializeInternalAsync()
+        {
+            CleanViewModel(true);
 
-                viewModel.MasterLanguage = DevelopmentEnvironment.Settings.MasterLanguage;
+            DevelopmentEnvironment.Settings = await General.GetLiveInstanceAsync();
 
-                await ReadInTranslationsAsync();
-            });
+            if (DevelopmentEnvironment.Settings == null)
+                throw new InvalidOperationException("Unable to read settings for Visual Studio extension WPF.Translations.VSEx.");
+
+            viewModel.MasterLanguage = DevelopmentEnvironment.Settings.MasterLanguage;
+
+            await ReadInTranslationsAsync();
         }
 
         private void ProjectEvents_ItemAdded(ProjectItem ProjectItem)
@@ -145,10 +162,7 @@ namespace WPF.Translations.VSEx
 
         private void SetTranslationData(List<ProjectTranslationFileViewModel> projectTranslationFiles)
         {
-            // clear old data
-            viewModel.TranslationFiles.Clear();
-            viewModel.ProjectsWithTranslations.Clear();
-            viewModel.SelectedProject = null;
+            CleanViewModel(true);
 
             // set new data
             foreach (ProjectTranslationFileViewModel file in projectTranslationFiles)
@@ -167,12 +181,12 @@ namespace WPF.Translations.VSEx
 
         private void SolutionEvents_AfterClosing()
         {
-            // todo : clean up our data
+           CleanViewModel(false);
         }
 
         private void SolutionEvents_Opened()
         {
-            // todo : read in our data
+            ThreadHelper.JoinableTaskFactory.Run(InitializeInternalAsync);
         }
 
         private void SolutionEvents_ProjectRemoved(EnvDTE.Project Project)
