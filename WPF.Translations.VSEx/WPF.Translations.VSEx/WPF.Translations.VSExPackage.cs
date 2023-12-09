@@ -42,14 +42,23 @@ namespace WPF.Translations.VSEx
 
         protected override void Dispose(bool disposing)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             base.Dispose(disposing);
 
-            // clean up objects
+            // clean up objects            
             DevelopmentEnvironment.DTE = null;
             DevelopmentEnvironment.DTE2 = null;
-            DevelopmentEnvironment.VisualStudioEvents = null;
-            DevelopmentEnvironment.SolutionEvents = null;
-            DevelopmentEnvironment.ProjectEvents = null;
+            DevelopmentEnvironment.OutputWindow.DeletePane(DevelopmentEnvironment.OutputWidowGuid);
+            DevelopmentEnvironment.OutputWindowPane = null;
+            DevelopmentEnvironment.OutputWindow = null;
+            DevelopmentEnvironment.OutputWidowGuid = Guid.Empty;
+            DevelopmentEnvironment.VSProjectDocuments.UnadviseTrackProjectDocumentsEvents(DevelopmentEnvironment.CookieProject);
+            DevelopmentEnvironment.VSProjectDocuments = null;
+            DevelopmentEnvironment.VsSolution.UnadviseSolutionEvents(DevelopmentEnvironment.CookieSolution);
+            DevelopmentEnvironment.VsSolution = null;
+            DevelopmentEnvironment.CookieProject = 0;
+            DevelopmentEnvironment.CookieSolution = 0;
         }
 
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
@@ -69,10 +78,19 @@ namespace WPF.Translations.VSEx
                 throw new InvalidOperationException("DTE2 cannot be found.");
 
             // get event objects
-            DevelopmentEnvironment.VisualStudioEvents = DevelopmentEnvironment.DTE.Events;
-            DevelopmentEnvironment.SolutionEvents = DevelopmentEnvironment.VisualStudioEvents.SolutionEvents;
-            DevelopmentEnvironment.ProjectEvents = DevelopmentEnvironment.VisualStudioEvents.SolutionItemsEvents;
+            DevelopmentEnvironment.VsSolution = await GetServiceAsync(typeof(SVsSolution)) as IVsSolution;
+            DevelopmentEnvironment.VSProjectDocuments = await GetServiceAsync(typeof(SVsTrackProjectDocuments)) as IVsTrackProjectDocuments2;
 
+            DevelopmentEnvironment.ProjectAdvisor = new ProjectAdvisor();
+            DevelopmentEnvironment.SolutionAdviser = new SolutionAdviser();
+
+            DevelopmentEnvironment.VsSolution.AdviseSolutionEvents(DevelopmentEnvironment.SolutionAdviser, out uint solutionCookie);
+            DevelopmentEnvironment.VSProjectDocuments.AdviseTrackProjectDocumentsEvents(DevelopmentEnvironment.ProjectAdvisor, out uint projectCookie);
+
+            DevelopmentEnvironment.CookieSolution = solutionCookie;
+            DevelopmentEnvironment.CookieProject = projectCookie;
+
+            // get output window
             DevelopmentEnvironment.OutputWindow = await GetServiceAsync(typeof(IVsOutputWindow)) as IVsOutputWindow;
             
             IVsOutputWindowPane outputWindowPane;

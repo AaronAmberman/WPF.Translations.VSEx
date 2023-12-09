@@ -35,16 +35,6 @@ namespace WPF.Translations.VSEx
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
-            DevelopmentEnvironment.SolutionEvents.AfterClosing += SolutionEvents_AfterClosing;
-            DevelopmentEnvironment.SolutionEvents.Opened += SolutionEvents_Opened;
-            DevelopmentEnvironment.SolutionEvents.ProjectAdded += SolutionEvents_ProjectAdded;
-            DevelopmentEnvironment.SolutionEvents.ProjectRemoved += SolutionEvents_ProjectRemoved;
-            DevelopmentEnvironment.SolutionEvents.Renamed += SolutionEvents_Renamed;
-
-            DevelopmentEnvironment.ProjectEvents.ItemAdded += ProjectEvents_ItemAdded;
-            DevelopmentEnvironment.ProjectEvents.ItemRemoved += ProjectEvents_ItemRemoved;
-            DevelopmentEnvironment.ProjectEvents.ItemRenamed += ProjectEvents_ItemRenamed;
-
             // our custom settings
             General.Saved += General_Saved;
 
@@ -87,16 +77,6 @@ namespace WPF.Translations.VSEx
             base.Dispose(disposing);
 
             // unassign events
-            DevelopmentEnvironment.SolutionEvents.AfterClosing -= SolutionEvents_AfterClosing;
-            DevelopmentEnvironment.SolutionEvents.Opened -= SolutionEvents_Opened;
-            DevelopmentEnvironment.SolutionEvents.ProjectAdded -= SolutionEvents_ProjectAdded;
-            DevelopmentEnvironment.SolutionEvents.ProjectRemoved -= SolutionEvents_ProjectRemoved;
-            DevelopmentEnvironment.SolutionEvents.Renamed -= SolutionEvents_Renamed;
-
-            DevelopmentEnvironment.ProjectEvents.ItemAdded -= ProjectEvents_ItemAdded;
-            DevelopmentEnvironment.ProjectEvents.ItemRemoved -= ProjectEvents_ItemRemoved;
-            DevelopmentEnvironment.ProjectEvents.ItemRenamed -= ProjectEvents_ItemRenamed;
-
             General.Saved -= General_Saved;
 
             control = null;
@@ -111,7 +91,6 @@ namespace WPF.Translations.VSEx
                 DevelopmentEnvironment.Settings = settingsInstance;
 
                 viewModel.MasterLanguage = settingsInstance.MasterLanguage;
-                // todo : handle master language change
 
                 ThreadHelper.JoinableTaskFactory.Run(ReadInTranslationsAsync);
             }
@@ -136,22 +115,6 @@ namespace WPF.Translations.VSEx
             viewModel.MasterLanguage = DevelopmentEnvironment.Settings.MasterLanguage;
 
             await ReadInTranslationsAsync();
-        }
-
-        private void ProjectEvents_ItemAdded(ProjectItem ProjectItem)
-        {
-            // todo : determine if item is a translation, if so update our stuff
-        }
-
-        private void ProjectEvents_ItemRemoved(ProjectItem ProjectItem)
-        {
-            // todo : determine if item is a translation, if so update our stuff
-        }
-
-        private void ProjectEvents_ItemRenamed(ProjectItem ProjectItem, string OldName)
-        {
-            // todo : is this the project being renamed or a file being renamed...or both?
-            // todo : determine if item is a translation, if so update our stuff
         }
 
         private async Task ReadInTranslationsAsync()
@@ -180,30 +143,15 @@ namespace WPF.Translations.VSEx
                 viewModel.SelectedProject = viewModel.ProjectsWithTranslations[0];
         }
 
-        private void SolutionEvents_AfterClosing()
-        {
-           CleanViewModel(false);
-        }
+        //private void SolutionEvents_AfterClosing()
+        //{
+        //   CleanViewModel(false);
+        //}
 
-        private void SolutionEvents_Opened()
-        {
-            ThreadHelper.JoinableTaskFactory.Run(InitializeInternalAsync);
-        }
-
-        private void SolutionEvents_ProjectRemoved(EnvDTE.Project Project)
-        {
-            // todo : remove the project and translations from our data (if any)
-        }
-
-        private void SolutionEvents_ProjectAdded(EnvDTE.Project Project)
-        {
-            // todo : if the newly added project contains translations added it to our data (dev can add an existing project)
-        }
-
-        private void SolutionEvents_Renamed(string OldName)
-        {
-            // todo : is this the solution or the project(s) in the solution?
-        }
+        //private void SolutionEvents_Opened()
+        //{
+        //    ThreadHelper.JoinableTaskFactory.Run(InitializeInternalAsync);
+        //}
 
         #endregion
     }

@@ -1,5 +1,4 @@
-﻿using Community.VisualStudio.Toolkit;
-using EnvDTE;
+﻿using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell.Interop;
 using System.Collections.Generic;
@@ -13,6 +12,10 @@ namespace WPF.Translations.VSEx
     {
         #region Properties
 
+        public static uint CookieProject { get; set; }
+
+        public static uint CookieSolution { get; set; }
+
         public static DTE DTE { get; set; }
 
         public static DTE2 DTE2 { get; set; }
@@ -23,13 +26,15 @@ namespace WPF.Translations.VSEx
 
         public static IVsOutputWindowPane OutputWindowPane { get; set; }
 
-        public static EnvDTE.ProjectItemsEvents ProjectEvents { get; set; }
+        public static IVsTrackProjectDocumentsEvents2 ProjectAdvisor { get; set; }
 
         public static General Settings { get; set; }
 
-        public static EnvDTE.SolutionEvents SolutionEvents { get; set; }
+        public static IVsSolutionEvents SolutionAdviser { get; set; }
 
-        public static EnvDTE.Events VisualStudioEvents { get; set; }
+        public static IVsTrackProjectDocuments2 VSProjectDocuments { get; set; }
+
+        public static IVsSolution VsSolution { get; set; }
 
         #endregion
 
@@ -72,11 +77,11 @@ namespace WPF.Translations.VSEx
                             }
                             else if (childItem.Name.EndsWith(".txt", StringComparison.OrdinalIgnoreCase))
                             {
-
+                                // todo
                             }
                             else if (childItem.Name.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
                             {
-
+                                // todo
                             }
                         }
                     }
