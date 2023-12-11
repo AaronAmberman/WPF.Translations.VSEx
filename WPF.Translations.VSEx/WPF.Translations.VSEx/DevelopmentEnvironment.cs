@@ -3,6 +3,7 @@ using EnvDTE80;
 using Microsoft.VisualStudio.Shell.Interop;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using WPF.Translations.VSEx.Types;
 using WPF.Translations.VSEx.ViewModels;
 
 namespace WPF.Translations.VSEx
@@ -26,11 +27,13 @@ namespace WPF.Translations.VSEx
 
         public static IVsOutputWindowPane OutputWindowPane { get; set; }
 
-        public static IVsTrackProjectDocumentsEvents2 ProjectAdvisor { get; set; }
+        public static ProjectAdvisor ProjectAdvisor { get; set; }
 
         public static General Settings { get; set; }
 
-        public static IVsSolutionEvents SolutionAdviser { get; set; }
+        public static SolutionAdviser SolutionAdviser { get; set; }
+
+        public static SolutionSnapshot SolutionSnapshot { get; set; }
 
         public static IVsTrackProjectDocuments2 VSProjectDocuments { get; set; }
 
@@ -42,6 +45,8 @@ namespace WPF.Translations.VSEx
 
         public static async Task<List<ProjectTranslationFileViewModel>> GetTranslationFilesForSolutionAsync()
         {
+            // make snapshot of solution while we are going through the items (this will be our "default" snapshot)
+            SolutionSnapshot solutionSnapshot = new SolutionSnapshot();            
             List<ProjectTranslationFileViewModel> projectTranslationFileViewModels = new List<ProjectTranslationFileViewModel>();
 
             // get translation files
@@ -49,13 +54,17 @@ namespace WPF.Translations.VSEx
 
             foreach (Community.VisualStudio.Toolkit.Project project in projects)
             {
-                foreach (SolutionItem item in project.Children)
+                List<Types.SolutionItem> solutionItems = new List<Types.SolutionItem>();
+
+                foreach (Community.VisualStudio.Toolkit.SolutionItem item in project.Children)
                 {
+                    solutionItems.Add(new Types.SolutionItem(item));
+
                     if (item.Name.IsTranslationsDirectory())
                     {
                         // the project contains a translations directory
 
-                        foreach (SolutionItem childItem in item.Children)
+                        foreach (Community.VisualStudio.Toolkit.SolutionItem childItem in item.Children)
                         {
                             if (childItem.Name.EndsWith(".xaml", StringComparison.OrdinalIgnoreCase))
                             {
@@ -86,7 +95,11 @@ namespace WPF.Translations.VSEx
                         }
                     }
                 }
+
+                solutionSnapshot.Projects.Add(new Types.Project(project), solutionItems);
             }
+
+            DevelopmentEnvironment.SolutionSnapshot = solutionSnapshot;
 
             return projectTranslationFileViewModels;
         }

@@ -9,6 +9,7 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 using System.Runtime.InteropServices;
 using System.Threading;
+using WPF.Translations.VSEx.Types;
 
 namespace WPF.Translations.VSEx
 {
@@ -59,6 +60,10 @@ namespace WPF.Translations.VSEx
             DevelopmentEnvironment.VsSolution = null;
             DevelopmentEnvironment.CookieProject = 0;
             DevelopmentEnvironment.CookieSolution = 0;
+            DevelopmentEnvironment.ProjectAdvisor = null;
+            DevelopmentEnvironment.SolutionAdviser.Dispose();
+            DevelopmentEnvironment.SolutionAdviser = null;
+            DevelopmentEnvironment.SolutionSnapshot = null;
         }
 
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)

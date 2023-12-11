@@ -1,16 +1,45 @@
 ﻿using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace WPF.Translations.VSEx
+namespace WPF.Translations.VSEx.Types
 {
-    public class ProjectAdvisor : IVsTrackProjectDocumentsEvents2
+    public class ProjectAdvisor : IProjectAdvisor
     {
+        #region Fields
+
+        private bool disposedValue;
+
+        #endregion
+
+        #region Events
+
+        public event EventHandler<SolutionItem> ItemClosed;
+        public event EventHandler<SolutionItem> ItemOpened; // file added (new or existing)
+        public event EventHandler<SolutionItem> ItemRenamed;
+
+        #endregion
+
         #region Methods
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    
+                }
+
+                disposedValue=true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+
+            GC.SuppressFinalize(this);
+        }
 
         public int OnQueryAddFiles(IVsProject pProject, int cFiles, string[] rgpszMkDocuments, VSQUERYADDFILEFLAGS[] rgFlags, VSQUERYADDFILERESULTS[] pSummaryResult, VSQUERYADDFILERESULTS[] rgResults)
         {
