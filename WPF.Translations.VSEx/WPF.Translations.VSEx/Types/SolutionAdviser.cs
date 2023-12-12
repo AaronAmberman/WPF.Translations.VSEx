@@ -188,10 +188,10 @@ namespace WPF.Translations.VSEx.Types
                 Project closedProject = DevelopmentEnvironment.SolutionSnapshot.Projects.FirstOrDefault(p =>
                     solutionSnapshot.Projects.All(sp => sp.Key.Name != p.Key.Name)).Key;
 
+                AssignNewSnapshot(solutionSnapshot);
+
                 if (closedProject != null)
                     ProjectClosed?.Invoke(this, closedProject);
-
-                AssignNewSnapshot(solutionSnapshot);
             });
         }
 
@@ -214,10 +214,10 @@ namespace WPF.Translations.VSEx.Types
                 Project newProject = solutionSnapshot.Projects.FirstOrDefault(p =>
                     DevelopmentEnvironment.SolutionSnapshot.Projects.All(sp => sp.Key.Name != p.Key.Name)).Key;
 
+                AssignNewSnapshot(solutionSnapshot);
+
                 if (newProject != null)
                     ProjectOpened?.Invoke(this, newProject);
-
-                AssignNewSnapshot(solutionSnapshot);
             });
         }
 
@@ -240,10 +240,10 @@ namespace WPF.Translations.VSEx.Types
                 Project newProject = solutionSnapshot.Projects.FirstOrDefault(p =>
                     DevelopmentEnvironment.SolutionSnapshot.Projects.All(sp => sp.Key.Name != p.Key.Name)).Key;
 
+                AssignNewSnapshot(solutionSnapshot);
+
                 if (newProject != null)
                     ProjectRenamed?.Invoke(this, newProject);
-
-                AssignNewSnapshot(solutionSnapshot);
             });
         }
 
