@@ -7,17 +7,28 @@ namespace WPF.Translations.VSEx.Types
     {
         #region Fields
 
-        private Action action;
-        private Timer timer;
-        private bool disposedValue;
+        protected Action action;
+        protected Timer timer;
+        protected bool disposedValue;
+
+        #endregion
+
+        #region Events
+
+        /// <summary>Occurs when the method is triggered.</summary>
+        public event EventHandler Ellapsed;
 
         #endregion
 
         #region Constructors
 
+        /// <summary>Initializes a new instance of the <see cref="Debouncer"/> class.</summary>
+        /// <param name="interval">The interval of time before the method can be fired if not called again.</param>
+        /// <param name="action">The method to call after the interval elapses.</param>
+        /// <exception cref="ArgumentNullException">action is null.</exception>
         public Debouncer(double interval, Action action)
         {
-            if (action == null) 
+            if (action == null)
                 throw new ArgumentNullException(nameof(action));
 
             this.action = action;
@@ -30,8 +41,21 @@ namespace WPF.Translations.VSEx.Types
 
         #region Methods
 
-        public void Debounce()
+        /// <summary>Stops the internal timer so the method will never be called.</summary>
+        public void Cancel()
         {
+            timer.Stop();
+        }
+
+        /// <summary>
+        /// Throttles/Debounces the method invocation so it only happens once in the given interval. Calling this 
+        /// method will reset the timer so it starts over (if it is running already).
+        /// </summary>
+        /// <exception cref="ObjectDisposedException">The object instance has been disposed.</exception>
+        public virtual void Debounce()
+        {
+            ThrowIfDisposed();
+
             // if the timer is running, stop it and start it again
             // this makes the interval reset
             if (timer.Enabled) timer.Stop();
@@ -41,8 +65,7 @@ namespace WPF.Translations.VSEx.Types
 
         protected virtual void Dispose(bool disposing)
         {
-            if (disposedValue)
-                throw new ObjectDisposedException("WPF.Translations.VSEx.Types.Debouncer");
+            ThrowIfDisposed();
 
             if (!disposedValue)
             {
@@ -56,21 +79,30 @@ namespace WPF.Translations.VSEx.Types
             }
         }
 
+        /// <summary>Free resources used by this object.</summary>
+        /// <exception cref="ObjectDisposedException">The object instance has been disposed.</exception>
         public void Dispose()
         {
-            if (disposedValue)
-                throw new ObjectDisposedException("WPF.Translations.VSEx.Types.Debouncer");
+            ThrowIfDisposed();
 
             Dispose(true);
 
             GC.SuppressFinalize(this);
         }
 
-        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        protected virtual void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             timer.Stop();
 
             action();
+
+            Ellapsed?.Invoke(this, e);
+        }
+
+        protected virtual void ThrowIfDisposed()
+        {
+            if (disposedValue)
+                throw new ObjectDisposedException("WPF.Core.Debouncer");
         }
 
         #endregion

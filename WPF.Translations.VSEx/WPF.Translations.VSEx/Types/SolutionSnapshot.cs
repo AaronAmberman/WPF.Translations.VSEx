@@ -1,6 +1,4 @@
-﻿using Community.VisualStudio.Toolkit;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 
 namespace WPF.Translations.VSEx.Types
 {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace WPF.Translations.VSEx.Types
 {
@@ -8,8 +9,10 @@ namespace WPF.Translations.VSEx.Types
     {
         #region Fields
 
-        private Debouncer projectOpenedDebouncer;
         private bool disposedValue;
+        private Debouncer projectClosedDebouncer;
+        private Debouncer projectOpenedDebouncer;
+        private Debouncer projectRenamedDebouncer;
 
         #endregion
 
@@ -28,12 +31,21 @@ namespace WPF.Translations.VSEx.Types
 
         public SolutionAdviser()
         {
+            projectClosedDebouncer = new Debouncer(1000, ProjectClosedSnapshot);
             projectOpenedDebouncer = new Debouncer(1000, ProjectOpenedSnapshot);
+            projectRenamedDebouncer = new Debouncer(1000, ProjectRenamedSnapshot);
         }
 
         #endregion
 
         #region Methods
+
+        private void AssignNewSnapshot(SolutionSnapshot solutionSnapshot)
+        {
+            DevelopmentEnvironment.SolutionSnapshot?.Projects.Clear();
+            DevelopmentEnvironment.SolutionSnapshot = null;
+            DevelopmentEnvironment.SolutionSnapshot = solutionSnapshot;
+        }
 
         protected virtual void Dispose(bool disposing)
         {
@@ -41,7 +53,9 @@ namespace WPF.Translations.VSEx.Types
             {
                 if (disposing)
                 {
+                    projectClosedDebouncer.Dispose();
                     projectOpenedDebouncer.Dispose();
+                    projectRenamedDebouncer.Dispose();
                 }
 
                 disposedValue = true;
@@ -63,37 +77,24 @@ namespace WPF.Translations.VSEx.Types
             return VSConstants.S_OK;
         }
 
-        private void ProjectOpenedSnapshot()
+        public int OnAfterRenameProject(IVsHierarchy pHierarchy)
         {
-            ThreadHelper.JoinableTaskFactory.Run(async () =>
-            {
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+            // throttle the call to taking a snapshot
+            projectRenamedDebouncer.Debounce();
 
-                SolutionSnapshot solutionSnapshot = new SolutionSnapshot();
-
-                await solutionSnapshot.TakeSolutionSnapshotAsync();
-
-                // find the project that is not in the original snapshot but is in the new snapshot
-                Project newProject = solutionSnapshot.Projects.FirstOrDefault(p => DevelopmentEnvironment.SolutionSnapshot.Projects.All(sp => sp.Key.Name != p.Key.Name)).Key;
-
-                if (newProject != null)
-                    ProjectOpened?.Invoke(this, newProject);
-
-                DevelopmentEnvironment.SolutionSnapshot.Projects.Clear();
-                DevelopmentEnvironment.SolutionSnapshot = null;
-                DevelopmentEnvironment.SolutionSnapshot = solutionSnapshot;
-            });
-        }
-
-        public int OnQueryCloseProject(IVsHierarchy pHierarchy, int fRemoving, ref int pfCancel)
-        {
             return VSConstants.S_OK;
         }
 
         public int OnBeforeCloseProject(IVsHierarchy pHierarchy, int fRemoved)
         {
-            // project closed
+            // throttle the call to taking a snapshot
+            projectClosedDebouncer.Debounce();
 
+            return VSConstants.S_OK;
+        }
+
+        public int OnQueryCloseProject(IVsHierarchy pHierarchy, int fRemoving, ref int pfCancel)
+        {
             return VSConstants.S_OK;
         }
 
@@ -114,7 +115,17 @@ namespace WPF.Translations.VSEx.Types
 
         public int OnAfterOpenSolution(object pUnkReserved, int fNewSolution)
         {
-            // solution opened
+            // we don't need the project opened to fire as well (this method fires after project opened)
+            projectOpenedDebouncer.Cancel();
+
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                SolutionSnapshot solutionSnapshot = await TakeSnapshotAsync();
+
+                AssignNewSnapshot(solutionSnapshot);
+
+                SolutionOpened?.Invoke(this, EventArgs.Empty);
+            });
 
             return VSConstants.S_OK;
         }
@@ -131,14 +142,14 @@ namespace WPF.Translations.VSEx.Types
 
         public int OnAfterCloseSolution(object pUnkReserved)
         {
-            // solution closed
+            projectClosedDebouncer.Cancel();
+            projectOpenedDebouncer.Cancel();
+            projectRenamedDebouncer.Cancel();
 
-            return VSConstants.S_OK;
-        }
+            DevelopmentEnvironment.SolutionSnapshot.Projects.Clear();
+            DevelopmentEnvironment.SolutionSnapshot = null;
 
-        public int OnAfterRenameProject(IVsHierarchy pHierarchy)
-        {
-            // project renamed
+            SolutionClosed?.Invoke(this, EventArgs.Empty);
 
             return VSConstants.S_OK;
         }
@@ -156,6 +167,94 @@ namespace WPF.Translations.VSEx.Types
         public int OnAfterAsynchOpenProject(IVsHierarchy pHierarchy, int fAdded)
         {
             return VSConstants.S_OK;
+        }
+
+        private void ProjectClosedSnapshot()
+        {
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                if (DevelopmentEnvironment.SolutionSnapshot == null) return;
+
+                SolutionSnapshot solutionSnapshot = await TakeSnapshotAsync();
+
+                if (DevelopmentEnvironment.SolutionSnapshot == null)
+                {
+                    AssignNewSnapshot(solutionSnapshot);
+
+                    return;
+                }
+
+                // find the project that is in the original snapshot but is not in the new snapshot
+                Project closedProject = DevelopmentEnvironment.SolutionSnapshot.Projects.FirstOrDefault(p =>
+                    solutionSnapshot.Projects.All(sp => sp.Key.Name != p.Key.Name)).Key;
+
+                if (closedProject != null)
+                    ProjectClosed?.Invoke(this, closedProject);
+
+                AssignNewSnapshot(solutionSnapshot);
+            });
+        }
+
+        private void ProjectOpenedSnapshot()
+        {
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                if (DevelopmentEnvironment.SolutionSnapshot == null) return;
+
+                SolutionSnapshot solutionSnapshot = await TakeSnapshotAsync();
+
+                if (DevelopmentEnvironment.SolutionSnapshot == null)
+                {
+                    AssignNewSnapshot(solutionSnapshot);
+
+                    return;
+                }
+
+                // find the project that is not in the original snapshot but is in the new snapshot
+                Project newProject = solutionSnapshot.Projects.FirstOrDefault(p =>
+                    DevelopmentEnvironment.SolutionSnapshot.Projects.All(sp => sp.Key.Name != p.Key.Name)).Key;
+
+                if (newProject != null)
+                    ProjectOpened?.Invoke(this, newProject);
+
+                AssignNewSnapshot(solutionSnapshot);
+            });
+        }
+
+        private void ProjectRenamedSnapshot()
+        {
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                if (DevelopmentEnvironment.SolutionSnapshot == null) return;
+
+                SolutionSnapshot solutionSnapshot = await TakeSnapshotAsync();
+
+                if (DevelopmentEnvironment.SolutionSnapshot == null)
+                {
+                    AssignNewSnapshot(solutionSnapshot);
+
+                    return;
+                }
+
+                // find the project that is not in the original snapshot but is in the new snapshot
+                Project newProject = solutionSnapshot.Projects.FirstOrDefault(p =>
+                    DevelopmentEnvironment.SolutionSnapshot.Projects.All(sp => sp.Key.Name != p.Key.Name)).Key;
+
+                if (newProject != null)
+                    ProjectRenamed?.Invoke(this, newProject);
+
+                AssignNewSnapshot(solutionSnapshot);
+            });
+        }
+
+        protected async Task<SolutionSnapshot> TakeSnapshotAsync()
+        {
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+            SolutionSnapshot solutionSnapshot = new SolutionSnapshot();
+            await solutionSnapshot.TakeSolutionSnapshotAsync();
+
+            return solutionSnapshot;
         }
 
         #endregion
