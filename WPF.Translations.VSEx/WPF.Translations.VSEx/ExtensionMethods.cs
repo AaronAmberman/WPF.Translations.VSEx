@@ -2,6 +2,15 @@
 {
     public static class ExtensionMethods
     {
+        #region String
+
+        public static string EnsureDirectoryEndsWithBackSlash(this string path)
+        {
+            string dir = path.EndsWith("\\") ? path : path + "\\";
+
+            return dir;
+        }
+
         public static string GetCultureFromFileName(this string fileName, string fileExtension) 
         {
             if (fileName.Contains("Translations")) // English
@@ -115,5 +124,7 @@
 
             return false;
         }
+
+        #endregion
     }
 }

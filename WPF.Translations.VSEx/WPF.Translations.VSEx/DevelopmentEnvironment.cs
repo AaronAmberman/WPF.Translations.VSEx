@@ -11,6 +11,12 @@ namespace WPF.Translations.VSEx
     /// <summary>A static helper class for Visual Studio level objects and methods.</summary>
     public static class DevelopmentEnvironment
     {
+        #region Fields
+
+        private static SolutionSnapshot solutionSnapshot;
+
+        #endregion
+
         #region Properties
 
         public static uint CookieProject { get; set; }
@@ -33,7 +39,27 @@ namespace WPF.Translations.VSEx
 
         public static SolutionAdviser SolutionAdviser { get; set; }
 
-        public static SolutionSnapshot SolutionSnapshot { get; set; }
+        public static SolutionSnapshot SolutionSnapshot 
+        {
+            get => solutionSnapshot;
+            set
+            {
+                if (solutionSnapshot != null)
+                {
+                    foreach (var project in solutionSnapshot.Projects)
+                    {
+                        foreach (var si in project.Key.Children)
+                            si.Children.Clear();
+
+                        project.Key.Children.Clear();
+                    }
+
+                    solutionSnapshot.Projects.Clear();
+                }
+
+                solutionSnapshot = value;
+            }
+        }
 
         public static IVsTrackProjectDocuments2 VSProjectDocuments { get; set; }
 
@@ -45,6 +71,9 @@ namespace WPF.Translations.VSEx
 
         public static async Task<List<ProjectTranslationFileViewModel>> GetTranslationFilesForSolutionAsync()
         {
+            // todo : make this read solution items with children recursively
+            //        the reason is because the Translations direcory might not be top level...stop expecting my project structure
+
             // make snapshot of solution while we are going through the items (this will be our "default" snapshot)
             SolutionSnapshot solutionSnapshot = new SolutionSnapshot();            
             List<ProjectTranslationFileViewModel> projectTranslationFileViewModels = new List<ProjectTranslationFileViewModel>();
@@ -99,9 +128,19 @@ namespace WPF.Translations.VSEx
                 solutionSnapshot.Projects.Add(new Types.Project(project), solutionItems);
             }
 
-            DevelopmentEnvironment.SolutionSnapshot = solutionSnapshot;
+            SolutionSnapshot = solutionSnapshot;
 
             return projectTranslationFileViewModels;
+        }
+
+        public static async Task<SolutionSnapshot> TakeSnapshotAsync()
+        {
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+            SolutionSnapshot solutionSnapshot = new SolutionSnapshot();
+            await solutionSnapshot.TakeSolutionSnapshotAsync();
+
+            return solutionSnapshot;
         }
 
         public static int WriteToOutputWindow(string message)

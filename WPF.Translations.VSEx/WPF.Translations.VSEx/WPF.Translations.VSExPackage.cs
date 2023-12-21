@@ -60,6 +60,7 @@ namespace WPF.Translations.VSEx
             DevelopmentEnvironment.VsSolution = null;
             DevelopmentEnvironment.CookieProject = 0;
             DevelopmentEnvironment.CookieSolution = 0;
+            DevelopmentEnvironment.ProjectAdvisor.Dispose();
             DevelopmentEnvironment.ProjectAdvisor = null;
             DevelopmentEnvironment.SolutionAdviser.Dispose();
             DevelopmentEnvironment.SolutionAdviser = null;

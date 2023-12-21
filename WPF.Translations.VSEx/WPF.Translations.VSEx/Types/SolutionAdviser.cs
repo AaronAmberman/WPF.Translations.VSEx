@@ -38,13 +38,6 @@ namespace WPF.Translations.VSEx.Types
 
         #region Methods
 
-        private void AssignNewSnapshot(SolutionSnapshot solutionSnapshot)
-        {
-            DevelopmentEnvironment.SolutionSnapshot?.Projects.Clear();
-            DevelopmentEnvironment.SolutionSnapshot = null;
-            DevelopmentEnvironment.SolutionSnapshot = solutionSnapshot;
-        }
-
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
@@ -80,11 +73,11 @@ namespace WPF.Translations.VSEx.Types
             {
                 if (DevelopmentEnvironment.SolutionSnapshot == null) return;
 
-                SolutionSnapshot solutionSnapshot = await TakeSnapshotAsync();
+                SolutionSnapshot solutionSnapshot = await DevelopmentEnvironment.TakeSnapshotAsync();
 
                 if (DevelopmentEnvironment.SolutionSnapshot == null)
                 {
-                    AssignNewSnapshot(solutionSnapshot);
+                    DevelopmentEnvironment.SolutionSnapshot = solutionSnapshot;
 
                     return;
                 }
@@ -93,7 +86,7 @@ namespace WPF.Translations.VSEx.Types
                 Project newProject = solutionSnapshot.Projects.FirstOrDefault(p =>
                     DevelopmentEnvironment.SolutionSnapshot.Projects.All(sp => sp.Key.Name != p.Key.Name)).Key;
 
-                AssignNewSnapshot(solutionSnapshot);
+                DevelopmentEnvironment.SolutionSnapshot = solutionSnapshot;
 
                 if (newProject != null)
                     ProjectRenamed?.Invoke(this, newProject);
@@ -137,9 +130,9 @@ namespace WPF.Translations.VSEx.Types
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                SolutionSnapshot solutionSnapshot = await TakeSnapshotAsync();
+                SolutionSnapshot solutionSnapshot = await DevelopmentEnvironment.TakeSnapshotAsync();
 
-                AssignNewSnapshot(solutionSnapshot);
+                DevelopmentEnvironment.SolutionSnapshot = solutionSnapshot;
 
                 SolutionOpened?.Invoke(this, EventArgs.Empty);
             });
@@ -191,11 +184,11 @@ namespace WPF.Translations.VSEx.Types
             {
                 if (DevelopmentEnvironment.SolutionSnapshot == null) return;
 
-                SolutionSnapshot solutionSnapshot = await TakeSnapshotAsync();
+                SolutionSnapshot solutionSnapshot = await DevelopmentEnvironment.TakeSnapshotAsync();
 
                 if (DevelopmentEnvironment.SolutionSnapshot == null)
                 {
-                    AssignNewSnapshot(solutionSnapshot);
+                    DevelopmentEnvironment.SolutionSnapshot = solutionSnapshot;
 
                     return;
                 }
@@ -204,7 +197,7 @@ namespace WPF.Translations.VSEx.Types
                 Project newProject = solutionSnapshot.Projects.FirstOrDefault(p =>
                     DevelopmentEnvironment.SolutionSnapshot.Projects.All(sp => sp.Key.Name != p.Key.Name)).Key;
 
-                AssignNewSnapshot(solutionSnapshot);
+                DevelopmentEnvironment.SolutionSnapshot = solutionSnapshot;
 
                 if (newProject != null)
                     ProjectAdded?.Invoke(this, newProject);
@@ -217,11 +210,11 @@ namespace WPF.Translations.VSEx.Types
             {
                 if (DevelopmentEnvironment.SolutionSnapshot == null) return;
 
-                SolutionSnapshot solutionSnapshot = await TakeSnapshotAsync();
+                SolutionSnapshot solutionSnapshot = await DevelopmentEnvironment.TakeSnapshotAsync();
 
                 if (DevelopmentEnvironment.SolutionSnapshot == null)
                 {
-                    AssignNewSnapshot(solutionSnapshot);
+                    DevelopmentEnvironment.SolutionSnapshot = solutionSnapshot;
 
                     return;
                 }
@@ -230,21 +223,11 @@ namespace WPF.Translations.VSEx.Types
                 Project closedProject = DevelopmentEnvironment.SolutionSnapshot.Projects.FirstOrDefault(p =>
                     solutionSnapshot.Projects.All(sp => sp.Key.Name != p.Key.Name)).Key;
 
-                AssignNewSnapshot(solutionSnapshot);
+                DevelopmentEnvironment.SolutionSnapshot = solutionSnapshot;
 
                 if (closedProject != null)
                     ProjectRemoved?.Invoke(this, closedProject);
             });
-        }
-
-        protected async Task<SolutionSnapshot> TakeSnapshotAsync()
-        {
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
-            SolutionSnapshot solutionSnapshot = new SolutionSnapshot();
-            await solutionSnapshot.TakeSolutionSnapshotAsync();
-
-            return solutionSnapshot;
         }
 
         #endregion
