@@ -44,18 +44,18 @@ namespace WPF.Translations.VSEx
             get => solutionSnapshot;
             set
             {
-                if (solutionSnapshot != null)
-                {
-                    foreach (var project in solutionSnapshot.Projects)
-                    {
-                        foreach (var si in project.Key.Children)
-                            si.Children.Clear();
+                //if (solutionSnapshot != null)
+                //{
+                //    foreach (var project in solutionSnapshot.Projects)
+                //    {
+                //        foreach (var si in project.Key.Children)
+                //            si.Children.Clear();
 
-                        project.Key.Children.Clear();
-                    }
+                //        project.Key.Children.Clear();
+                //    }
 
-                    solutionSnapshot.Projects.Clear();
-                }
+                //    solutionSnapshot.Projects.Clear();
+                //}
 
                 solutionSnapshot = value;
             }
